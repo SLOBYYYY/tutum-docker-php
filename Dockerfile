@@ -1,5 +1,5 @@
 FROM ubuntu:trusty
-MAINTAINER Fernando Mayo <fernando@tutum.co>
+MAINTAINER Maj Szabolcs
 
 # Install base packages
 ENV DEBIAN_FRONTEND noninteractive
@@ -15,7 +15,10 @@ RUN apt-get update && \
         php-apc && \
     rm -rf /var/lib/apt/lists/*
 RUN sed -i "s/variables_order.*/variables_order = \"EGPCS\"/g" /etc/php5/apache2/php.ini
+RUN sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Enable rewrite mod for apache2
+RUN a2enmod rewrite
 
 # Add image configuration and scripts
 ADD run.sh /run.sh
